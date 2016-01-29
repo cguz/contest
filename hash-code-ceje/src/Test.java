@@ -1,6 +1,6 @@
 
 public class Test {
 
-	private String cadena = "Pesaó";
+	private String cadena = "sadasdsad";
 	
 }
