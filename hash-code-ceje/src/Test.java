@@ -1,5 +1,5 @@
 
-public class JesusMarica {
+public class Test {
 
 	private String cadena = "Cesardsd  MK";
 	
