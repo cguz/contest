@@ -2,12 +2,18 @@ package hash.code;
 
 public class Destination implements Comparable<Destination> {
 
-	int origin = -1;
+	//int origin = -1;
 	int destination = -1;
-	double time = 0;
-	double length = 0;
+	int time = 0;
+	int length = 0;
 	int numberTimes = 0;
 	
+	public Destination(int string, int string2, int string3) {
+		destination = string;
+		time = string2;
+		length = string3;
+	}
+
 	//this < o -> 	-1
 	//o > this ->	1
 	//this = 0
