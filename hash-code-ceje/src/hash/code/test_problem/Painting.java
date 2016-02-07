@@ -37,17 +37,11 @@ public class Painting {
 			
 			int N = Integer.parseInt(temp[0]);
 			int M = Integer.parseInt(temp[1]);
+						
 			
 			for (int i = 1; i <= N; ++i) {
 				
-				bf.readLine();
-				junctions.add(new Junction(-1, -1));
-				
-			}
-			
-			for (int i = 1; i <= M; ++i) {
-				
-				temp2 = bf.readLine().split(" ");
+				temp2 = bf.readLine().replaceAll("", ).split(" ");
 				
 				junctions.get(Integer.parseInt(temp2[0])).destiny.colaEspera.add(new Destination(Integer.parseInt(temp[1]), 
 						Integer.parseInt(temp2[3]), Integer.parseInt(temp2[4])));
@@ -56,9 +50,6 @@ public class Painting {
 					junctions.get(Integer.parseInt(temp2[1])).destiny.colaEspera.add(new Destination(Integer.parseInt(temp[0]), 
 							Integer.parseInt(temp2[3]), Integer.parseInt(temp2[4])));
 				}
-				
-				/*temp2 = bf.readLine().split(" ");
-				city.junctions.add(new Junction(Integer.parseInt(temp2[1]), Integer.parseInt(temp2[2])));*/
 				
 			}
 
