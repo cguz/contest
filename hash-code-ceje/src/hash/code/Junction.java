@@ -6,7 +6,7 @@ public class Junction {
 	int[] location = new int[2];
 	
 	// set of destiny in a junction
-	QueueDestiny destiny = new QueueDestiny();
+	public QueueDestiny destiny = new QueueDestiny();
 	
 	
 	public Junction(int lat, int longitud) {
