@@ -38,20 +38,24 @@ public class State implements Comparable<State> {
 		}
 		
 		if(action[0]==ACTIONS.PAINT_LINE.ordinal()){
-			if(action[1] == action[3])
+			if(action[1] == action[3]){
 				for(int i=action[2]; i<=action[4];++i){
 					if(goal_state[(action[1]*M)+i]==1){
 						goal_state[(action[1]*M)+i]=0;
 						--goal_painted;
 					}
 				}
-			if(action[2] == action[4])
-				for(int i=action[1]; i<=action[3];++i){
-					if(goal_state[(i*M)+action[2]]==1){
-						goal_state[(i*M)+action[2]]=0;
-						--goal_painted;
+			}else{
+				// System.out.println(ACTIONS.PAINT_LINE.toString()+" "+action[1]+" "+action[2]+" "+action[3]+" "+action[4]);
+				if(action[2] == action[4])
+					for(int i=action[1]; i<=action[3];++i){
+						// System.out.println((i*M)+action[2]);
+						if(goal_state[(i*M)+action[2]]==1){
+							goal_state[(i*M)+action[2]]=0;
+							--goal_painted;
+						}
 					}
-				}
+			}
 		}
 		
 		if(action[0]==ACTIONS.PAINT_SQUARE.ordinal()){
