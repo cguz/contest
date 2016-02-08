@@ -1,4 +1,4 @@
-package hash.code;
+package street_view_problem;
 
 import java.util.ArrayList;
 
