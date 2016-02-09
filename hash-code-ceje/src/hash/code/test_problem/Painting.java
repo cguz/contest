@@ -16,6 +16,7 @@ public class Painting {
 
 	public int[] goal_state;
 	public int   goal_painted=0;
+	private int heuristic;
 	
 	
 	public static void main(String[] args) {
@@ -29,8 +30,9 @@ public class Painting {
 		String output = "";
 		String[] sCadena = null;
 		try {
-
-			BufferedReader bf = new BufferedReader(new FileReader("/home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje/input/example.txt"));
+			// /home/zenshi/git/hash-code/hash-code-ceje/input
+			// /home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje
+			BufferedReader bf = new BufferedReader(new FileReader("/home/zenshi/git/hash-code/hash-code-ceje/input/example.txt"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			String[] temp = bf.readLine().split(" ");
@@ -98,22 +100,26 @@ public class Painting {
 			System.out.println("\n");
 		}*/
 		
-		// List<int[]> actions;
+		List<int[]> actions;
 		
 		State state, state_generated;
 		
 		Queue<State> Q = new LinkedList<State>();
 		Q.add(root_state);
 		
+		heuristic = root_state.goal_painted;
 		while(!Q.isEmpty()){
 			state = Q.poll();
 
-			int[] i = get_actions(state);
-			//actions = get_actions(state);
-			//for(int[] i: actions){
+			if(state.goal_painted == 23)
+				System.out.println("\n");
+			
+			// int[] i = get_actions(state);
+			actions = get_actions(state);
+			for(int[] i: actions){
 			
 				state_generated = regress(i, state);
-
+				
 				/*System.out.println("\n");
 				System.out.println("\n");
 				for (int k = 0; k < state_generated.N; ++k) {
@@ -127,11 +133,14 @@ public class Painting {
 				if(state_generated.goal_painted==0)
 					return path(state_generated);
 				
-				Q.add(state_generated);
-			// }
+				if(heuristic > state_generated.goal_painted){
+					heuristic = state_generated.goal_painted;
+					// System.out.println(heuristic);
+					Q.add(state_generated);
+				}
+			}
 				
-				if((Q.size() % 400)==0)
-					System.out.println(Q.size());
+			// System.out.println(Q.size());
 		}
 		
 		return new ArrayList<int[]>(0);
@@ -158,11 +167,13 @@ public class Painting {
 		return new_state;
 	}
 
-	private int[] get_actions(State state) {
+	private List<int[]> get_actions(State state) {
 		
 		int[] act_square=null;
 		int[] act_lineal=null;
 		int[] act_erase=null;
+		
+		List<int[]> act = new ArrayList<int[]>(3);
 		
 		for (int i = 0; i < state.N && (act_erase == null); ++i) {
 			
@@ -196,15 +207,15 @@ public class Painting {
 		}
 
 		if(act_square != null)
-			return act_square;
+			act.add(act_square);
 		
 		if(act_erase != null)
-			return act_erase;
+			act.add(act_erase);
 			
 		if(act_lineal!=null)
-			return act_lineal;
+			act.add(act_lineal);
 		
-		return null;
+		return act;
 	}
 
 	private int[] get_actions_line(State state, int i, int j) {
@@ -226,7 +237,7 @@ public class Painting {
 		}
 		
 		if(horizontal > (index-j))	
-			return new int[]{ACTIONS.PAINT_LINE.ordinal(),i,j,horizontal-i,j, horizontal};
+			return new int[]{ACTIONS.PAINT_LINE.ordinal(),i,j,horizontal+i,j, horizontal};
 		
 		return new int[]{ACTIONS.PAINT_LINE.ordinal(),i,j,i,index, index-j};
 
