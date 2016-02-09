@@ -110,9 +110,6 @@ public class Painting {
 		heuristic = root_state.goal_painted;
 		while(!Q.isEmpty()){
 			state = Q.poll();
-
-			if(state.goal_painted == 23)
-				System.out.println("\n");
 			
 			// int[] i = get_actions(state);
 			actions = get_actions(state);
