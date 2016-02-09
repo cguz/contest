@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import hash.code.tools.Files;
+
 
 /**
  * @Challenge Painting
@@ -32,7 +34,7 @@ public class Painting {
 		try {
 			// /home/zenshi/git/hash-code/hash-code-ceje/input
 			// /home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje
-			BufferedReader bf = new BufferedReader(new FileReader("/home/zenshi/git/hash-code/hash-code-ceje/input/example.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/home/zenshi/git/hash-code/hash-code-ceje/input/learn_and_teach.in"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			String[] temp = bf.readLine().split(" ");
@@ -64,28 +66,30 @@ public class Painting {
 			
 			
 			// SHOW THE PATH
-			for(int[] i: path){
+			
+			
+			// sint T = Integer.parseInt(bf.readLine());
+			// if (T >= 1 && T <= 20){
+			output = output + path.size()+"\n";
+			for(int j = path.size()-1; j>=0; --j){
+				int[] i = path.get(j);
 				if(i[0]==ACTIONS.ERASE_CELL.ordinal()){
-					System.out.println(ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]);
+					output = output + ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]+"\n";
 				}
 				if(i[0]==ACTIONS.PAINT_LINE.ordinal()){
-					System.out.println(ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]+" "+i[5]);
+					output = output + ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]+"\n";
 				}
 				if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
-					System.out.println(ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]);
+					output = output + ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+"\n";
 				}
 			}
-			
-			/*// sint T = Integer.parseInt(bf.readLine());
-			if (T >= 1 && T <= 20)
-				for (int i = 1; i <= T; ++i) {
-					sCadena = bf.readLine().split(" ");
-					output = output + "Case #"+i+": "+fontSizer(sCadena)+"\n";
-				}
-			
+			// }
+
+			System.out.println(output+"\nscore:"+(goal_painted-path.size()));
+				
 			Files file = new Files("output", false);
 			file.write(output);
-			file.close();*/
+			file.close();
 		} catch (IOException e) {
 		}
 	}
@@ -132,7 +136,6 @@ public class Painting {
 				
 				if(heuristic > state_generated.goal_painted){
 					heuristic = state_generated.goal_painted;
-					// System.out.println(heuristic);
 					Q.add(state_generated);
 				}
 			}
