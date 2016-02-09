@@ -59,18 +59,17 @@ public class State implements Comparable<State> {
 		}
 		
 		if(action[0]==ACTIONS.PAINT_SQUARE.ordinal()){
-			for (int i=0; i <= action[3];++i){
-				
-					paint(((action[1]+i)*M)+(action[2]+i));
 
-					paint((action[1]*M)+(action[2]+i));
-					paint((action[1]*M)+(action[2]-i));
-					paint(((action[1]+i)*M)+action[2]);
-					paint(((action[1]+i)*M)+(action[2]+i));
-					paint(((action[1]+i)*M)+(action[2]-i));
-					paint(((action[1]-i)*M)+action[2]);
-					paint(((action[1]-i)*M)+(action[2]+i));
-					paint(((action[1]-i)*M)+(action[2]-i));
+			int top_i = action[1]-action[3];
+			int left_j = action[2]-action[3];
+			
+			int bottom_i = action[1]+action[3];
+			int right_j = action[2]+action[3];
+			
+			for (int i = top_i; i <= bottom_i; ++i) {
+				for(int j = left_j; j <= right_j; ++j){
+					paint((i*M)+j);
+				}
 			}
 		}
 	}

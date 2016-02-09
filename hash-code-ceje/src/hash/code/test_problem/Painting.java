@@ -30,7 +30,7 @@ public class Painting {
 		String[] sCadena = null;
 		try {
 
-			BufferedReader bf = new BufferedReader(new FileReader("/home/zenshi/git/hash-code/hash-code-ceje/input/example.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje/input/example.txt"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			String[] temp = bf.readLine().split(" ");
@@ -67,7 +67,7 @@ public class Painting {
 					System.out.println(ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]);
 				}
 				if(i[0]==ACTIONS.PAINT_LINE.ordinal()){
-					System.out.println(ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]);
+					System.out.println(ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]+" "+i[5]);
 				}
 				if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
 					System.out.println(ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]);
@@ -98,7 +98,7 @@ public class Painting {
 			System.out.println("\n");
 		}*/
 		
-		List<int[]> actions;
+		// List<int[]> actions;
 		
 		State state, state_generated;
 		
@@ -108,18 +108,30 @@ public class Painting {
 		while(!Q.isEmpty()){
 			state = Q.poll();
 
-			actions = get_actions(state);
-			
-			// int[] i = actions.get(0);
-			for(int[] i: actions){
+			int[] i = get_actions(state);
+			//actions = get_actions(state);
+			//for(int[] i: actions){
 			
 				state_generated = regress(i, state);
+
+				/*System.out.println("\n");
+				System.out.println("\n");
+				for (int k = 0; k < state_generated.N; ++k) {
+				
+					for(int j = 0; j < state_generated.M; ++j){
+						System.out.print(state_generated.goal_state[(k*state_generated.M)+j]+" ");
+					}
+					System.out.println("\n");
+				}*/
 				
 				if(state_generated.goal_painted==0)
 					return path(state_generated);
 				
 				Q.add(state_generated);
-			}
+			// }
+				
+				if((Q.size() % 400)==0)
+					System.out.println(Q.size());
 		}
 		
 		return new ArrayList<int[]>(0);
@@ -146,121 +158,146 @@ public class Painting {
 		return new_state;
 	}
 
-	private List<int[]> get_actions(State state) {
+	private int[] get_actions(State state) {
 		
 		int[] act_square=null;
 		int[] act_lineal=null;
 		int[] act_erase=null;
 		
-		List<int[]> act = new ArrayList<int[]>(3);
-		
-		for (int i = 0; i < state.N && (act_square == null || act_erase == null); ++i) {
+		for (int i = 0; i < state.N && (act_erase == null); ++i) {
 			
-			for(int j = 0; j < state.M && (act_square == null || act_erase == null); ++j){
+			for(int j = 0; j < state.M && (act_erase == null); ++j){
 				if(state.goal_state[(i*state.M)+j] == 1){
 					
 					// saving square
-					act_square = get_actions_square(state, i, j);
-					if(act_square != null)
-						act.add(0, act_square);
+					act_erase = get_actions_square(state, i, j);
+					if(act_square == null)
+						act_square = act_erase;
+					else{
+						if(act_erase!= null && act_erase[3] > act_square[3])
+							act_square = act_erase;
+					}
+					act_erase= null;
 					
 					// saving line
 					act_erase = get_actions_line(state, i, j);
 					if(act_lineal == null)
 						act_lineal = act_erase;
 					else{
-						if(act_erase[5] > act_lineal[5])
+						if(act_erase!= null && act_erase[5] > act_lineal[5])
 							act_lineal = act_erase;
 					}
+					act_erase= null;
 					
 				}else{
-					act_erase = get_actions_erase(state, i, j);
-					if(act_erase != null)
-						act.add(0,act_erase);
+					act_erase = get_actions_erase(state, i, j);;
 				}
 			}
 		}
 
-		if(act_lineal!=null)
-			act.add(act_lineal);
+		if(act_square != null)
+			return act_square;
 		
-		return act;
+		if(act_erase != null)
+			return act_erase;
+			
+		if(act_lineal!=null)
+			return act_lineal;
+		
+		return null;
 	}
 
 	private int[] get_actions_line(State state, int i, int j) {
 
 		int index = i;
 		for (int k = i; k < state.N; ++k) {
-			if(state.goal_state[(k*state.M)+j] != 1){
-				index = k-1;
-				break;
-			}
+			if(state.goal_state[(k*state.M)+j] == 1){
+				index = k;
+			}else{ break; }
 		}
 		
 		int horizontal = index-i;
 		
 		index = j;
 		for (int k = j; k < state.M; ++k) {
-			if(state.goal_state[(i*state.M)+k] != 1){
-				index = k-1;
-				break;
-			}
+			if(state.goal_state[(i*state.M)+k] == 1){
+				index = k;
+			}else{ break; }
 		}
 		
 		if(horizontal > (index-j))	
 			return new int[]{ACTIONS.PAINT_LINE.ordinal(),i,j,horizontal-i,j, horizontal};
 		
 		return new int[]{ACTIONS.PAINT_LINE.ordinal(),i,j,i,index, index-j};
-		
+
 	}
 	
-	private int[] get_actions_erase(State state, int i, int j) {
+	private int[] get_actions_erase(State state, int R, int C) {
 
 		
-		int index = 1;
+		int S = 1;
 		int total = 0;
-		if((j+index) < state.M && ((j-index) >= 0) && (i+index) < state.N && ((i-index) >= 0)){
+		int[] RC = new int[2];
+		if((R+S) < state.N && ((R-S) >= 0) && (C+S) < state.M && ((C-S) >= 0)){
+
+			int top_i = R-S;
+			int left_j = C-S;
 			
-			total = state.goal_state[(i*state.M)+(j+index)] + state.goal_state[(i*state.M)+(j-index)] + 
-					state.goal_state[((i+index)*state.M)+j] + state.goal_state[((i-index)*state.M)+j] + 
-					state.goal_state[((i+index)*state.M)+(j+index)] + state.goal_state[((i-index)*state.M)+(j-index)] + 
-					state.goal_state[((i+index)*state.M)+(j-index)] + state.goal_state[((i-index)*state.M)+(j+index)];
+			int bottom_i = R+S;
+			int right_j = C+S;
 			
-			
+			for (int i = top_i; i <= bottom_i; ++i) {
+				for(int j = left_j; j <= right_j; ++j){
+					total = total + state.goal_state[(i*state.M)+j];
+					if(state.goal_state[(i*state.M)+j]==0){
+						RC[0]=i;
+						RC[1]=j;
+					}
+				}
+			}
 		}
 
-		if(total >= 7)
-			return new int[]{ACTIONS.ERASE_CELL.ordinal(),i,j};
+		if(total == 8)
+			return new int[]{ACTIONS.ERASE_CELL.ordinal(),R,C};
+		
+		if(total == 7)
+			return new int[]{ACTIONS.ERASE_CELL.ordinal(),RC[0],RC[1]};
 		
 		return null;
 	}
 	
-	private int[] get_actions_square(State state, int i, int j) {
+	private int[] get_actions_square(State state, int R, int C) {
 
-		int index = 0;
+		int S = 0;
 		boolean stop=false;
 		while (!stop) {
 			int total = 0;
-			if((j+index) < state.M && ((j-index) >= 0) && (i+index) < state.N && ((i-index) >= 0)){
+			if((R+S) < state.N && ((R-S) >= 0) && (C+S) < state.M && ((C-S) >= 0)){
 
-				total = state.goal_state[(i*state.M)+(j+index)] + state.goal_state[(i*state.M)+(j-index)] + 
-						state.goal_state[((i+index)*state.M)+j] + state.goal_state[((i-index)*state.M)+j] + 
-						state.goal_state[((i+index)*state.M)+(j+index)] + state.goal_state[((i-index)*state.M)+(j-index)] + 
-						state.goal_state[((i+index)*state.M)+(j-index)] + state.goal_state[((i-index)*state.M)+(j+index)];
+				int top_i = R-S;
+				int left_j = C-S;
 				
+				int bottom_i = R+S;
+				int right_j = C+S;
+				
+				for (int i = top_i; i <= bottom_i; ++i) {
+					for(int j = left_j; j <= right_j; ++j){
+						total = total + state.goal_state[(i*state.M)+j];
+					}
+				}
 			}
 			
-			if(total == 8){
-				++index;
+			if(total == (((2*S)+1)*((2*S)+1))){
+				++S;
 			}else{
 				stop = true;
 				break;
 			}
 		}
 
-		--index;
-		if(index>0)
-			return new int[]{ACTIONS.PAINT_SQUARE.ordinal(),i,j,index};
+		--S;
+		if(S>0)
+			return new int[]{ACTIONS.PAINT_SQUARE.ordinal(),R,C,S};
 		return null;
 	}
 
