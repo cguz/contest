@@ -82,7 +82,7 @@ public class Painting {
 				if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
 					output = output + ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+"\n";
 				}
-			}
+			}  
 			// }
 
 			System.out.println(output+"\nscore:"+(goal_painted-path.size()));
