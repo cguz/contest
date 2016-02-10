@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 import hash.code.tools.Files;
@@ -34,7 +35,7 @@ public class Painting {
 		try {
 			// /home/zenshi/git/hash-code/hash-code-ceje/input
 			// /home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje
-			BufferedReader bf = new BufferedReader(new FileReader("/home/zenshi/git/hash-code/hash-code-ceje/input/learn_and_teach.in"));
+			BufferedReader bf = new BufferedReader(new FileReader("/home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje/input/right_angle.in"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			String[] temp = bf.readLine().split(" ");
@@ -108,7 +109,7 @@ public class Painting {
 		
 		State state, state_generated;
 		
-		Queue<State> Q = new LinkedList<State>();
+		Queue<State> Q = new PriorityQueue<State>();
 		Q.add(root_state);
 		
 		heuristic = root_state.goal_painted;
