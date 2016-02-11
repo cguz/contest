@@ -28,12 +28,14 @@ public class State {
 	public void execute(){
 		switch(type_action){
 			case DELIVER:
+				
 				break;			
 			case LOAD:
+				
 				break;
 			case UNLOAD:
+				
 				break;
-			
 			case WAIT: 
 				
 				break;
