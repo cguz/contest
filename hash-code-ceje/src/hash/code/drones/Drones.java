@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import hash.code.test_problem.ACTIONS;
-import hash.code.test_problem.State;
 import hash.code.tools.Files;
 
 
@@ -18,7 +16,7 @@ import hash.code.tools.Files;
  */
 public class Drones {
 
-	public ArrayList<Junction> junctions = new ArrayList<Junction>();
+	// public ArrayList<State> junctions = new ArrayList<Junction>();
 
 	
 	public static void main(String[] args) {
@@ -28,55 +26,80 @@ public class Drones {
 		
 	}
 
+	private int rows;
+	private int columns;
+	private int D;
+	private int deadline;
+	private int maximum_load;
+
 	private void begin(String[] args) {
 		String output = "";
-		String[] sCadena = null;
 		try {
 
-			BufferedReader bf = new BufferedReader(new FileReader("/home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje/input/paris_54000.txt"));
+			BufferedReader bf = new BufferedReader(new FileReader("/home/anubis/Trabajos/java/hash-code/git/hash-code/hash-code-ceje/input/example.txt"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			String[] temp = bf.readLine().split(" ");
 			String[] temp2;
 			
-			int N = Integer.parseInt(temp[0]);
-			int M = Integer.parseInt(temp[1]);
-			int T = Integer.parseInt(temp[2]);
-			int C = Integer.parseInt(temp[3]);
-			int S = Integer.parseInt(temp[4]);
+			rows = Integer.parseInt(temp[0]);
+			columns = Integer.parseInt(temp[1]);
+			D = Integer.parseInt(temp[2]);
+			deadline = Integer.parseInt(temp[3]);
+			maximum_load = Integer.parseInt(temp[4]);
 			
-			for (int i = 1; i <= N; ++i) {
+			// different product types
+			int[] product_types_weigh = new int[Integer.parseInt(bf.readLine())];
+			
+			// product types
+			temp = bf.readLine().split(" ");
+			int i=0;
+			for(String t: temp)
+				product_types_weigh[i++]=Integer.parseInt(t);
+			
+			int total_warehouse = Integer.parseInt(bf.readLine());
+			List<int[]> warehouses = new ArrayList<int[]>(total_warehouse);
+			for(i=0; i < total_warehouse; ++i){
+				temp = bf.readLine().split(" "); // <x, y, 0,..,p>
 				
-				bf.readLine();
-				junctions.add(new Junction(-1, -1));
+				int[] temp_content = new int[2+product_types_weigh.length];
+				temp_content[0]=Integer.parseInt(temp[0]);
+				temp_content[1]=Integer.parseInt(temp[1]);
 				
-				// System.out.println(bf.readLine());
+				temp = bf.readLine().split(" ");
+				int j = 2;
+				for(String t: temp)
+					temp_content[j++] = Integer.parseInt(t);
 				
-				/*temp2 = bf.readLine().split(" ");
-				city.junctions.add(new Junction(Integer.parseInt(temp2[1]), Integer.parseInt(temp2[2])));*/
+				warehouses.add(temp_content);
 				
 			}
 			
-			for (int i = 1; i <= M; ++i) {
+			int total_orders = Integer.parseInt(bf.readLine());
+			List<int[]> orders = new ArrayList<int[]>(total_orders);
+			for(i=0; i < total_orders; ++i){
+				temp = bf.readLine().split(" "); // <x, y, 0,..,p>
+				
+				bf.readLine();
 				
 				temp2 = bf.readLine().split(" ");
 				
-				junctions.get(Integer.parseInt(temp2[0])).destiny.colaEspera.add(new Destination(Integer.parseInt(temp[1]), 
-						Integer.parseInt(temp2[3]), Integer.parseInt(temp2[4])));
+				int[] temp_content = new int[2+product_types_weigh.length];
+				temp_content[0]=Integer.parseInt(temp[0]);
+				temp_content[1]=Integer.parseInt(temp[1]);
+				// inicializar a zero
+
+				for(String t: temp2)
+					temp_content[Integer.parseInt(t)]+= 1;
 				
-				if(Integer.parseInt(temp2[2])==2){
-					junctions.get(Integer.parseInt(temp2[1])).destiny.colaEspera.add(new Destination(Integer.parseInt(temp[0]), 
-							Integer.parseInt(temp2[3]), Integer.parseInt(temp2[4])));
-				}
-				
+				orders.add(temp_content);
 				
 			}
 
-			
 			// FIND A PATH
-			List<int[]> path = find_path();
+			List<int[]> path = find_path(new State(warehouses, orders));
 			
-			save(path);
+			// save(path);
 
 			System.out.println(output+"\nscore:");
 		
@@ -85,10 +108,8 @@ public class Drones {
 	}
 	
 
-	private List<int[]> find_path() {
+	private List<int[]> find_path(State state) {
 		
-		
-		State state, state_generated;
 		
 		/*Queue<State> Q = new PriorityQueue<State>();
 		Q.add(root_state);
@@ -139,7 +160,7 @@ public class Drones {
 		output = output + (path.size())+"\n";
 		for(int j = path.size()-1; j>=0; --j){
 			int[] i = path.get(j);
-			if(i[0]==ACTIONS.ERASE_CELL.ordinal()){
+			/*if(i[0]==ACTIONS.ERASE_CELL.ordinal()){
 				output = output + ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]+"\n";
 			}
 			if(i[0]==ACTIONS.PAINT_LINE.ordinal()){
@@ -147,7 +168,7 @@ public class Drones {
 			}
 			if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
 				output = output + ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+"\n";
-			}
+			}*/
 		}  
 		
 		Files file = new Files("output", false);
