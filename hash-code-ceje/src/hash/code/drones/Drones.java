@@ -31,6 +31,10 @@ public class Drones {
 	private int D;
 	private int deadline;
 	private int maximum_load;
+	
+	
+	
+	private int heuristic;
 
 	private void begin(String[] args) {
 		String output = "";
@@ -77,6 +81,7 @@ public class Drones {
 			
 			int total_orders = Integer.parseInt(bf.readLine());
 			List<int[]> orders = new ArrayList<int[]>(total_orders);
+			int orders_total = 0;
 			for(i=0; i < total_orders; ++i){
 				temp = bf.readLine().split(" "); // <x, y, 0,..,p>
 				
@@ -87,17 +92,27 @@ public class Drones {
 				int[] temp_content = new int[2+product_types_weigh.length];
 				temp_content[0]=Integer.parseInt(temp[0]);
 				temp_content[1]=Integer.parseInt(temp[1]);
-				// inicializar a zero
 
-				for(String t: temp2)
+				for(String t: temp2){
 					temp_content[Integer.parseInt(t)]+= 1;
+					orders_total++;
+				}
 				
 				orders.add(temp_content);
 				
 			}
 
+			List<int[]> drones = new ArrayList<int[]>(D);  // <x, y, w, 0,..,p>
+			for(i = 0; i < D; ++i){
+				int[] t = new int[2+1+product_types_weigh.length];
+				t[0] = warehouses.get(0)[0];
+				t[1] = warehouses.get(0)[1];
+				drones.add(t);
+			}
+			
+			
 			// FIND A PATH
-			List<int[]> path = find_path(new State(warehouses, orders));
+			List<int[]> path = find_path(new State(D, warehouses, orders, orders_total, drones));
 			
 			// save(path);
 
@@ -111,13 +126,13 @@ public class Drones {
 	private List<int[]> find_path(State state) {
 		
 		
-		/*Queue<State> Q = new PriorityQueue<State>();
-		Q.add(root_state);
+		Queue<State> Q = new PriorityQueue<State>();
+		Q.add(state);
 		
 		while(!Q.isEmpty()){
 			state = Q.poll();
 			
-			heuristic = state.goal_painted;
+			/*heuristic = state.goal_painted;
 			
 			// int[] i = get_actions(state);
 			actions = get_actions(state);
@@ -145,11 +160,10 @@ public class Drones {
 					if(heuristic!=0)
 						Q.add(state_generated);
 				}
-			}
+			}*/
 		}
 		
-		return best_solution;*/
-		return null;
+		return null; // best_solution;
 	}
 	
 	private List<int[]> save(List<int[]> path) {
