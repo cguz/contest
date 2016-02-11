@@ -1,5 +1,8 @@
 package hash.code.test_problem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class State implements Comparable<State> {
 
 	int N;
@@ -9,6 +12,8 @@ public class State implements Comparable<State> {
 	
 	int[] action;
 	State parent;
+
+	List<int[]> path = new ArrayList<int[]>(0);
 	
 	public State(int[] goal_state, int goal_painted, int n, int m) {
 		this.goal_state = goal_state;
@@ -80,9 +85,23 @@ public class State implements Comparable<State> {
 			--goal_painted;
 		}
 	}
+	
+	public List<int[]> path() {
+		
+		if(!path.isEmpty())
+			return path;
+		
+		State state_generated = this;
+		while(state_generated != null && state_generated.parent!=null){
+			path.add(state_generated.action);
+			state_generated=state_generated.parent;
+		}
+		
+		return path;
+	}
 
 	@Override
 	public int compareTo(State o) {
-		return this.goal_painted-o.goal_painted;
+		return (this.goal_painted*this.path().size())-(o.goal_painted*o.path().size());
 	}
 }

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -65,56 +64,30 @@ public class Painting {
 			// FIND A PATH
 			List<int[]> path = find_path(new State(goal_state, goal_painted, N, M));
 			
-			
-			// SHOW THE PATH
-			
-			
-			// sint T = Integer.parseInt(bf.readLine());
-			// if (T >= 1 && T <= 20){
-			output = output + path.size()+"\n";
-			for(int j = path.size()-1; j>=0; --j){
-				int[] i = path.get(j);
-				if(i[0]==ACTIONS.ERASE_CELL.ordinal()){
-					output = output + ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]+"\n";
-				}
-				if(i[0]==ACTIONS.PAINT_LINE.ordinal()){
-					output = output + ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]+"\n";
-				}
-				if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
-					output = output + ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+"\n";
-				}
-			}  
-			// }
+			save(path);
 
 			System.out.println(output+"\nscore:"+(goal_painted-path.size()));
-				
-			Files file = new Files("output", false);
-			file.write(output);
-			file.close();
+		
 		} catch (IOException e) {
 		}
 	}
 
 	private List<int[]> find_path(State root_state) {
 		
-		/*for (int i = 0; i < root_state.N; ++i) {
-			
-			for(int j = 0; j < root_state.M; ++j){
-				System.out.print(root_state.goal_state[(i*root_state.M)+j]+" ");
-			}
-			System.out.println("\n");
-		}*/
-		
 		List<int[]> actions;
+		List<int[]> best_solution=null;
+		List<int[]> sol;
+		int total_solutions = 0, max_solutions = 1000;
 		
 		State state, state_generated;
 		
 		Queue<State> Q = new PriorityQueue<State>();
 		Q.add(root_state);
 		
-		heuristic = root_state.goal_painted;
 		while(!Q.isEmpty()){
 			state = Q.poll();
+			
+			heuristic = state.goal_painted;
 			
 			// int[] i = get_actions(state);
 			actions = get_actions(state);
@@ -122,43 +95,59 @@ public class Painting {
 			
 				state_generated = regress(i, state);
 				
-				/*System.out.println("\n");
-				System.out.println("\n");
-				for (int k = 0; k < state_generated.N; ++k) {
-				
-					for(int j = 0; j < state_generated.M; ++j){
-						System.out.print(state_generated.goal_state[(k*state_generated.M)+j]+" ");
+				if(state_generated.goal_painted==0){
+					++total_solutions;
+					if(best_solution==null){
+						best_solution = save(state_generated.path());
+					}else{
+						sol = state_generated.path();
+						if(sol.size()<best_solution.size())
+							best_solution = save(sol);
 					}
-					System.out.println("\n");
-				}*/
+					
+					if(total_solutions >= max_solutions){
+						return best_solution;	
+					}
+				}
 				
-				if(state_generated.goal_painted==0)
-					return path(state_generated);
-				
-				if(heuristic > state_generated.goal_painted){
+				if(state_generated.goal_painted < heuristic){
 					heuristic = state_generated.goal_painted;
-					Q.add(state_generated);
+					if(heuristic!=0)
+						Q.add(state_generated);
 				}
 			}
-				
-			// System.out.println(Q.size());
 		}
 		
-		return new ArrayList<int[]>(0);
+		return best_solution;
 	}
 
-	private List<int[]> path(State state_generated) {
+	private List<int[]> save(List<int[]> path) {
+		// if (T >= 1 && T <= 20){
+		System.out.println("new solution size: "+path.size());
 		
-		List<int[]> path = new ArrayList<int[]>();
+		String output = "";
+		output = output + (path.size())+"\n";
+		for(int j = path.size()-1; j>=0; --j){
+			int[] i = path.get(j);
+			if(i[0]==ACTIONS.ERASE_CELL.ordinal()){
+				output = output + ACTIONS.ERASE_CELL.toString()+" "+i[1]+" "+i[2]+"\n";
+			}
+			if(i[0]==ACTIONS.PAINT_LINE.ordinal()){
+				output = output + ACTIONS.PAINT_LINE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+" "+i[4]+"\n";
+			}
+			if(i[0]==ACTIONS.PAINT_SQUARE.ordinal()){
+				output = output + ACTIONS.PAINT_SQUARE.toString()+" "+i[1]+" "+i[2]+" "+i[3]+"\n";
+			}
+		}  
 		
-		while(state_generated.parent!=null){
-			path.add(state_generated.action);
-			state_generated=state_generated.parent;
-		}
+		Files file = new Files("output", false);
+		file.write(output);
+		file.close();
 		
+		// }
 		return path;
 	}
-
+	
 	private State regress(int[] i, State state) {
 		
 		State new_state = new State(i, state);
@@ -172,46 +161,49 @@ public class Painting {
 		
 		int[] act_square=null;
 		int[] act_lineal=null;
-		int[] act_erase=null;
+		int[] act_temp	=null;
+		List<int[]> act_erase= new ArrayList<int[]>();
 		
 		List<int[]> act = new ArrayList<int[]>(3);
 		
-		for (int i = 0; i < state.N && (act_erase == null); ++i) {
+		for (int i = 0; i < state.N && (act_temp == null); ++i) {
 			
-			for(int j = 0; j < state.M && (act_erase == null); ++j){
+			for(int j = 0; j < state.M && (act_temp == null); ++j){
 				if(state.goal_state[(i*state.M)+j] == 1){
 					
 					// saving square
-					act_erase = get_actions_square(state, i, j);
+					act_temp = get_actions_square(state, i, j);
 					if(act_square == null)
-						act_square = act_erase;
+						act_square = act_temp;
 					else{
-						if(act_erase!= null && act_erase[3] > act_square[3])
-							act_square = act_erase;
+						if(act_temp!= null && act_temp[3] > act_square[3])
+							act_square = act_temp;
 					}
-					act_erase= null;
+					act_temp= null;
 					
 					// saving line
-					act_erase = get_actions_line(state, i, j);
+					act_temp = get_actions_line(state, i, j);
 					if(act_lineal == null)
-						act_lineal = act_erase;
+						act_lineal = act_temp;
 					else{
-						if(act_erase!= null && act_erase[5] > act_lineal[5])
-							act_lineal = act_erase;
+						if(act_temp!= null && act_temp[5] > act_lineal[5])
+							act_lineal = act_temp;
 					}
-					act_erase= null;
-					
 				}else{
-					act_erase = get_actions_erase(state, i, j);;
+					act_temp = get_actions_erase_middle(state, i, j);
+					if(act_temp != null)
+						act_erase.add(act_temp);
 				}
+				
+				act_temp= null;
 			}
 		}
 
 		if(act_square != null)
 			act.add(act_square);
 		
-		if(act_erase != null)
-			act.add(act_erase);
+		if(!act_erase.isEmpty())
+			act.addAll(0,act_erase);
 			
 		if(act_lineal!=null)
 			act.add(act_lineal);
@@ -244,7 +236,7 @@ public class Painting {
 
 	}
 	
-	private int[] get_actions_erase(State state, int R, int C) {
+	private int[] get_actions_erase_middle(State state, int R, int C) {
 
 		
 		int S = 1;
