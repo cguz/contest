@@ -1,4 +1,4 @@
-package street_view_problem;
+package hash.code.street_view;
 
 public class Destination implements Comparable<Destination> {
 

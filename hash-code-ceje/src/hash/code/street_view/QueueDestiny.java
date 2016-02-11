@@ -1,4 +1,4 @@
-package street_view_problem;
+package hash.code.street_view;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
