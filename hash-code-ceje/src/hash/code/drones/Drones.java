@@ -32,7 +32,7 @@ public class Drones {
 	private int deadline;
 	private int maximum_load;
 	
-	
+	int[] product_types_weigh;
 	
 	private int heuristic;
 
@@ -53,7 +53,7 @@ public class Drones {
 			maximum_load = Integer.parseInt(temp[4]);
 			
 			// different product types
-			int[] product_types_weigh = new int[Integer.parseInt(bf.readLine())];
+			product_types_weigh = new int[Integer.parseInt(bf.readLine())];
 			
 			// product types
 			temp = bf.readLine().split(" ");
@@ -112,9 +112,7 @@ public class Drones {
 			
 			
 			// FIND A PATH
-			List<int[]> path = find_path(new State(D, warehouses, orders, orders_total, drones));
-			
-			// save(path);
+			find_path(new State(warehouses, orders, orders_total, drones));
 
 			System.out.println(output+"\nscore:");
 		
@@ -123,49 +121,115 @@ public class Drones {
 	}
 	
 
-	private List<int[]> find_path(State state) {
+	private void find_path(State state) {
 		
-		
-		Queue<State> Q = new PriorityQueue<State>();
-		Q.add(state);
-		
-		while(!Q.isEmpty()){
-			state = Q.poll();
+		while(state.time < deadline){
 			
-			/*heuristic = state.goal_painted;
+			System.out.println(state.orders_total);
+			
+			if(state.orders_total > heuristic){
+				heuristic = state.orders_total;
+				// save(state.path());
+			}
 			
 			// int[] i = get_actions(state);
-			actions = get_actions(state);
-			for(int[] i: actions){
+			get_actions(state);
+			state = state.execute();
+			// state.type_action=type_action;
 			
-				state_generated = regress(i, state);
-				
-				if(state_generated.goal_painted==0){
-					++total_solutions;
-					if(best_solution==null){
-						best_solution = save(state_generated.path());
-					}else{
-						sol = state_generated.path();
-						if(sol.size()<best_solution.size())
-							best_solution = save(sol);
-					}
-					
-					if(total_solutions >= max_solutions){
-						return best_solution;	
-					}
-				}
-				
-				if(state_generated.goal_painted < heuristic){
-					heuristic = state_generated.goal_painted;
-					if(heuristic!=0)
-						Q.add(state_generated);
-				}
-			}*/
 		}
 		
-		return null; // best_solution;
+	}
+
+	//in:	dron warehouse type numberProduct
+
+	private void get_actions(State state) {
+		
+		get_actions_load(state);
+
+		List<int[]> actions_deliver = get_actions_deliver(state);
+		
+	}
+
+
+	private List<int[]> get_actions_deliver(State state) {
+		int p = 0;  
+		
+		List<int[]> action = new ArrayList<int[]>();
+		
+		for(int j = 0; j <state.orders.size(); ++j){// <x, y, 0,..,p>
+			
+			int[] o = state.orders.get(j);
+			
+			while(p < product_types_weigh.length){
+				
+				if(o[p+2] > 0){
+					for(int i = 0; i <state.drones.size(); ++i){ // <x, y, w, 0,..,p> 
+						
+						int[] d = state.drones.get(i);
+						
+						if(d[p+3] > 0){
+
+							int diff = d[p+3] - o[p+2];
+							
+							if(diff <= 0){
+								state.action.add(new int[]{i, j, p, d[p+3]});
+							} else {
+								state.action.add(new int[]{i, j, p, o[p+2]});
+							}
+							state.type_action.add(ACTIONS.DELIVER);
+						}						
+					}
+				}
+				
+				++p;
+			}
+		}
+		
+		return action;
 	}
 	
+
+	private void get_actions_load(State state) {
+		int p = 0;  
+		
+		for(int j = 0; j <state.warehouses.size(); ++j){// <x, y, 0,..,p>
+			
+			int[] o = state.warehouses.get(j);
+			
+			while(p < product_types_weigh.length){
+				
+				if(o[p+2] > 0){
+					int products = o[p+2];
+					
+					for(int i = 0; i <state.drones.size() && products >0; ++i){ // <x, y, w, 0,..,p> 
+						
+						int[] d = state.drones.get(i);
+
+						int diff = (d[3] + (products*product_types_weigh[p])) - maximum_load;
+
+						//in:	dron warehouse type numberProduct
+						if(diff <= 0){
+							state.action.add(new int[]{i, j, p, o[p+2], product_types_weigh[p]});
+							products-= o[p+2];
+
+							state.type_action.add(ACTIONS.LOAD);
+						}
+					}
+				}
+				
+				++p;
+			}
+		}
+		
+	}
+
+	private int distance(int ax, int ay, int bx, int by) {
+		//euclidean distance
+		return (int) Math.round(Math.sqrt(Math.pow((ax - bx), 2) + Math.pow((ay - by), 2)));
+	}
+	
+
 	private List<int[]> save(List<int[]> path) {
 		// if (T >= 1 && T <= 20){
 		System.out.println("new solution size: "+path.size());
