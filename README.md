@@ -1,5 +1,3 @@
 # Contests
 
-## Google : 
-
-  ### hash-code
+## Google : hash-code
