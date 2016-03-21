@@ -1,4 +1,4 @@
-package hash_code.contest_2016.final_round.street_view;
+package hash_code.contest_2014.final_round.street_view;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
