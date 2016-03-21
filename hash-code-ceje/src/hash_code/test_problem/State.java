@@ -1,4 +1,4 @@
-package hash.code.test_problem;
+package hash_code.test_problem;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
-package hash.code.street_view;
+package hash_code.contest_2016.final_round.street_view;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import hash.code.tools.Files;
+import hash_code.tools.Files;
 
 
 /**

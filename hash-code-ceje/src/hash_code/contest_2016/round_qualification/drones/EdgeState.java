@@ -1,4 +1,4 @@
-package hash.code.drones;
+package hash_code.contest_2016.round_qualification.drones;
 
 public class EdgeState {
 

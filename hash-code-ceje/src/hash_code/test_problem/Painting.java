@@ -1,4 +1,4 @@
-package hash.code.test_problem;
+package hash_code.test_problem;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import hash.code.tools.Files;
+import hash_code.tools.Files;
 
 
 /**

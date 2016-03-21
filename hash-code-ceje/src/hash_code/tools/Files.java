@@ -1,7 +1,7 @@
 /** *  
  *  @author    		Cesar Augusto Guzman Alvarez
  */
-package hash.code.tools;
+package hash_code.tools;
 
 import java.io.BufferedWriter;
 import java.io.File;

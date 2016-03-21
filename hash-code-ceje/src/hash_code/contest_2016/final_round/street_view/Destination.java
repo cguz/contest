@@ -1,4 +1,4 @@
-package hash.code.street_view;
+package hash_code.contest_2016.final_round.street_view;
 
 public class Destination implements Comparable<Destination> {
 

@@ -1,4 +1,4 @@
-package hash.code.drones;
+package hash_code.contest_2016.round_qualification.drones;
 
 import java.util.ArrayList;
 import java.util.List;
