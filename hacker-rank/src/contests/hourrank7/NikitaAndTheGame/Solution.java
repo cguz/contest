@@ -1,5 +1,4 @@
 package contests.hourrank7.NikitaAndTheGame;
-import java.math.BigInteger;
 import java.util.Scanner;
 
 public class Solution {
