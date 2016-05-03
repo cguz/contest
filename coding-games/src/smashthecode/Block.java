@@ -49,6 +49,12 @@ public class Block {
 		end.next_down = n;
 		total++;
 	}
+
+	public void append(Block block) {
+		this.next_up = block;
+		block.next_down = this;
+		total++;
+	}
 	
 	// count the score of the grid
 	public int score(){
@@ -68,32 +74,39 @@ public class Block {
 		int count = 0;
 		int score = 0;
 		
+		int max_skull = 0;
 		while(cur.next_down != null){
-			if(cur.key == n.key){
+			if(cur.key == n.key || cur.key == '0'){
 				count++;
+				if(cur.key == '0')
+					max_skull++;
 			}else{
-				if(count > CONFIG.SCORE_MIN){
+				if(count >= (CONFIG.SCORE_MIN + max_skull)){
 					score+=count;
 					top = cur = remove_down(cur, n, top);
 					change_values(top);
 				}
 				n = cur;
 				count = 1;
+				max_skull = 0;
 			}
 			cur = cur.next_down;
 		}
 		
-		if(cur.key == n.key)
+		if(cur.key == n.key || cur.key == '0'){
 			count++;
-		
-		if(count > CONFIG.SCORE_MIN){
+			if(cur.key == '0')
+				max_skull++;
+		}
+				
+		if(count >= (CONFIG.SCORE_MIN + max_skull)){
 			score+=count;
 			if(cur.key == n.key){
 				top = null;
 			}else{
 				top = remove_down(cur, n, top);
 			}
-			change_values(top);
+			change_values(cur, top, count);
 		}
 		
 		return score;
@@ -118,38 +131,47 @@ public class Block {
 		int count = 0;
 		int score = 0;
 		
+		int max_skull = 0;
 		while(cur.next_up != null){
-			if(cur.key == n.key){
+			if(cur.key == n.key || cur.key == '0'){
 				count++;
+				if(cur.key == '0')
+					max_skull++;
 			}else{
-				if(count > CONFIG.SCORE_MIN){
+				if(count >= (CONFIG.SCORE_MIN + max_skull)){
 					score+=count;
 					top = cur = remove_up(cur,n,top);
 					change_values(top);
 				}
 				n = cur;
 				count = 1;
+				max_skull = 0;
 			}
 			cur = cur.next_up;
 		}
 		
-		if(cur.key == n.key)
+		if(cur.key == n.key || cur.key == '0'){
 			count++;
+			if(cur.key == '0')
+				max_skull++;
+		}
 		
-		if(count > CONFIG.SCORE_MIN){
+		if(count >= (CONFIG.SCORE_MIN + max_skull)){
 			score+=count;
 			if(cur.key == n.key){
 				top = null;
 			}else{
 				top = remove_up(cur,n,top);
 			}
-			change_values(top);
+			change_values(cur, top, count);
 		}
 		
 		return score;
 	}
+	
+	
 
-	// remove line
+	// remove up line 
 	private Block remove_up(Block cur, Block n, Block top) {
 		cur.next_down = n.next_down; 
 		if(cur.next_down != null){
@@ -160,8 +182,32 @@ public class Block {
 		}
 		return top;
 	}
+	
 
+	public void change_values(Block c, Block top, int count){
+		
+		Block n = c;
+		
+		while(count > 0){
+			n = n.next_down;
+			count--;
+		}
+		
+		if(n == null){
+			this.key='.';
+			this.next_down = null;
+			this.next_up = null;
+			this.next_left = null;
+			this.next_right = null;
+		}else{
+			n.next_up = top;
+			if(top != null)
+				top.next_down = c;
+		}
+	}
+	
 	public void change_values(Block c){
+		
 		if(c == null){
 			this.key='.';
 			this.next_down = null;
@@ -176,6 +222,31 @@ public class Block {
 			this.next_right = c.next_right;
 		}
 	}
+	
+	public void link_horizontal(Block block) {
+		
+		int min = block.total;
+		if(total < block.total)
+			min = total;
+
+		Block l = this;
+		Block r = block;
+		l.next_right = r;
+		r.next_left = l;
+		
+		while(min > 1){
+			
+			r = r.next_up;
+			l = l.next_up;
+			
+			l.next_right = r;
+			r.next_left = l;
+			
+			--min;
+		}
+		
+	}
+	
 
 	@Override
 	public String toString() {

@@ -18,6 +18,7 @@ public class ManagerGrid {
 			Grid temp = new Grid(current);
 			
 			temp.append(b, i);
+			temp.link_horizontal();
 			
 			score[i] = temp.score(true);
 			if(score[i] >= max){
@@ -49,24 +50,24 @@ public class ManagerGrid {
     	
     	Grid game = new Grid();
     	
-    	Block col = new Block('1');
-    	col.appendTail('1');
+    	Block col = new Block('2');
+    	col.appendTail('2');
     	col.appendTail('0');
+    	col.appendTail('1');
+    	col.appendTail('1');
 
-    	Block col1 = new Block('0');
-    	col1.appendTail('2');
-    	col1.appendTail('2');
+    	Block col1 = null;
 
-    	Block col3 = new Block('3');
-    	col3.appendTail('3');
+    	Block col3 = new Block('2');
+    	col3.appendTail('2');
+    	col3.appendTail('0');
     	
     	Block col4 = new Block('0');
-    	col4.appendTail('2');
-    	col4.appendTail('2');
-
-    	Block col5 = new Block('0');
+    	
+    	Block col5 = new Block('5');
     	col5.appendTail('5');
-    	col5.appendTail('5');
+    	col5.appendTail('0');
+    	
     	Block col6 = new Block('0');
     	
     	game.columns[0] = col;
@@ -76,16 +77,19 @@ public class ManagerGrid {
     	game.columns[4] = col5;
     	game.columns[5] = col6;
     	
+    	game.link_horizontal();
+    	
     	ManagerGrid m = new ManagerGrid(game);
     	
-    	Block c1 = new Block('3');
-    	c1.appendTail('3');
+    	Block c1 = new Block('2');
+    	c1.appendTail('2');
     	
     	
     	System.out.println(m.current);
     	int pos = m.dropBasic(c1);
-    	System.out.println(pos);
+    	System.out.println("pos: "+pos+"\n");
     	game.append(c1, pos);
+    	game.score(true);
     	System.out.println(m.current);
     	
     	/*c1 = new Block('1');
