@@ -3,6 +3,7 @@ package smashthecode;
 public class ManagerGrid {
 
 	public Grid current;
+	public Grid opponent;
 	
 	public ManagerGrid(Grid c) {
 		current=c;
@@ -44,7 +45,12 @@ public class ManagerGrid {
 		return pos_max_score;
 		
 	}
-	
+
+
+	private int dropExpert(Block c1, Block[] blocks) {
+		
+		return 0;
+	}
 
 	public static void main(String[] args){
     	
@@ -85,8 +91,28 @@ public class ManagerGrid {
     	c1.appendTail('2');
     	
     	
+    	Block[] blocks = new Block[8];
+    	blocks[0] = new Block('2');
+    	blocks[0].appendTail('2');
+    	blocks[1] = new Block('1');
+    	blocks[1].appendTail('1');
+    	blocks[2] = new Block('1');
+    	blocks[2].appendTail('1');
+    	blocks[3] = new Block('1');
+    	blocks[3].appendTail('1');
+    	blocks[4] = new Block('1');
+    	blocks[4].appendTail('1');
+    	blocks[5] = new Block('1');
+    	blocks[5].appendTail('1');
+    	blocks[6] = new Block('1');
+    	blocks[6].appendTail('1');
+    	blocks[7] = new Block('1');
+    	blocks[7].appendTail('1');
+    	
+    	
     	System.out.println(m.current);
     	int pos = m.dropBasic(c1);
+    	// int pos = m.dropExpert(c1, blocks);
     	System.out.println("pos: "+pos+"\n");
     	game.append(c1, pos);
     	game.score(true);

@@ -40,12 +40,175 @@ public class Grid {
 
 		for(int i =0; i < columns.length; i++){
 			if(columns[i] != null){
-				total_score += columns_score[i] = columns[i].score() + score_right(i);
+				total_score += columns_score[i] = score(i) + score_right(i);
 			}
 		}
 		
 		return total_score;
 		
+	}
+	
+	
+	// count the score of the grid
+	public int score(int i){
+		if(columns[i].next_up == null){
+			return score_down(i);
+		}else{
+			if(columns[i].next_down == null)
+				return score_up(i);
+		}
+		return 0;
+	}
+	
+
+	public int score_down(int i){
+		Block top = columns[i];
+		Block n = columns[i];
+		Block cur = columns[i];
+		int count = 0;
+		int score = 0;
+		
+		while(cur.next_down != null){
+			if(cur.key == n.key){
+				count++;
+			}else{
+				if(count >= CONFIG.SCORE_MIN){
+					score+=count;
+					top = cur = remove_down(cur, n, top);
+					change_values(i, top);
+				}
+				n = cur;
+				count = 1;
+			}
+			cur = cur.next_down;
+		}
+		
+		if(cur.key == n.key){
+			count++;
+		}
+				
+		if(count >= CONFIG.SCORE_MIN){
+			score+=count;
+			if(cur.key == n.key){
+				top = null;
+			}else{
+				top = remove_down(cur, n, top);
+			}
+			change_values(cur, top, count, i);
+		}
+		
+		return score;
+	}
+
+	// remove line
+	private Block remove_down(Block cur, Block n, Block top) {
+		cur.next_up = n.next_up; 
+		if(cur.next_up != null){
+			cur.next_up.next_down = cur;
+			cur = top;
+		}else{
+			top = cur;
+		}
+		return top;
+	}
+
+	public int score_up(int i){
+		Block top = columns[i];
+		Block n = columns[i];
+		Block cur = columns[i];
+		int count = 0;
+		int score = 0;
+		
+		int max_skull = 0;
+		while(cur.next_up != null){
+			if(cur.key == n.key || cur.key == '0'){
+				count++;
+				if(cur.key == '0')
+					max_skull++;
+			}else{
+				if(count >= (CONFIG.SCORE_MIN + max_skull)){
+					score+=count;
+					top = cur = remove_up(cur,n,top);
+					change_values(i,top);
+				}
+				n = cur;
+				count = 1;
+				max_skull = 0;
+			}
+			cur = cur.next_up;
+		}
+		
+		if(cur.key == n.key || cur.key == '0'){
+			count++;
+			if(cur.key == '0')
+				max_skull++;
+		}
+		
+		if(count >= (CONFIG.SCORE_MIN + max_skull)){
+			score+=count;
+			if(cur.key == n.key){
+				top = null;
+			}else{
+				top = remove_up(cur,n,top);
+			}
+			change_values(cur, top, count,i);
+		}
+		
+		return score;
+	}
+
+	
+	public void change_values(int i, Block c){
+		
+		if(c == null){
+			columns[i].key='.';
+			columns[i].next_down = null;
+			columns[i].next_up = null;
+			columns[i].next_left = null;
+			columns[i].next_right = null;
+		}else{
+			columns[i].key=c.key;
+			columns[i].next_down = c.next_down;
+			columns[i].next_up = c.next_up;
+			columns[i].next_left = c.next_left;
+			columns[i].next_right = c.next_right;
+		}
+	}
+	
+	
+	public void change_values(Block c, Block top, int count, int i){
+			
+		Block n = c;
+		
+		while(count > 0){
+			n = n.next_down;
+			count--;
+		}
+		
+		if(n == null){
+			columns[i].key='.';
+			columns[i].next_down = null;
+			columns[i].next_up = null;
+			columns[i].next_left = null;
+			columns[i].next_right = null;
+		}else{
+			n.next_up = top;
+			if(top != null)
+				top.next_down = c;
+		}
+	}
+	
+
+	// remove up line 
+	private Block remove_up(Block cur, Block n, Block top) {
+		cur.next_down = n.next_down; 
+		if(cur.next_down != null){
+			cur.next_down.next_up = cur;
+			cur = top;
+		}else{
+			top = cur;
+		}
+		return top;
 	}
 	
 
@@ -55,14 +218,11 @@ public class Grid {
 		int count = 0;
 		int score = 0;
 		
-		int max_skull = 0;
 		while(cur.next_right != null){
-			if(cur.key == n.key || cur.key == '0'){
+			if(cur.key == n.key){
 				count++;
-				if(cur.key == '0')
-					max_skull++;
 			}else{
-				if(count >= (CONFIG.SCORE_MIN + max_skull)){
+				if(count >= CONFIG.SCORE_MIN){
 					score+=count;
 					n = n.next_up;
 					i = remove_right(i,n.next_down);
@@ -75,19 +235,16 @@ public class Grid {
 				}
 				n = cur;
 				count = 1;
-				max_skull = 0;
 			}
 			i++;
 			cur = cur.next_right;
 		}
 		
-		if(cur.key == n.key || cur.key == '0'){
+		if(cur.key == n.key){
 			count++;
-			if(cur.key == '0')
-				max_skull++;
 		}
 		
-		if(count >= (CONFIG.SCORE_MIN + max_skull)){
+		if(count >= CONFIG.SCORE_MIN){
 			score+=count;
 			remove_right(i,n.next_down);
 		}

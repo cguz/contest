@@ -56,7 +56,9 @@ public class Block {
 		total++;
 	}
 	
-	// count the score of the grid
+	/* 
+	 * lo he sacado de aqui, lo utilizo en grid
+	 * */
 	public int score(){
 		if(next_up == null){
 			return score_down();
