@@ -1,4 +1,4 @@
-package smashthecode;
+package contest.smashthecode;
 
 public class ManagerGrid {
 
@@ -14,6 +14,11 @@ public class ManagerGrid {
 		int[] score = new int[6];
 		int max= 0;
 		int pos_max_score = -1;
+		
+		int max_skull = 1000000;
+		int pos_max_skull = -1;
+		int pos_null = -1;
+		
 		for(int i =0; i < current.columns.length; i++){
 			Grid temp = new Grid(current);
 			
@@ -24,21 +29,27 @@ public class ManagerGrid {
 			if(score[i] >= max){
 				max = score[i];
 				pos_max_score = i;
-			}	
+			}
+			
+			if(current.columns[i] != null){
+				if(current.columns[i].key == '0'){
+					if(current.columns[i].total < max_skull){
+						max_skull = current.columns[i].total;
+						pos_max_skull = i;
+					}
+				}
+			}
+			if(current.columns[i] == null){
+				pos_null = i;
+			}
 		}
 		
 		if(max == 0){
-			max = 1000000;
-			for(int i=0; i < current.columns.length;++i){
-				if(current.columns[i] == null){
-					pos_max_score = i;
-					break;
-				}
-				if(current.columns[i].total < max){
-					max = current.columns[i].total;
-					pos_max_score = i;
-				}
-			}
+			if(pos_max_skull != -1)
+				pos_max_score = pos_max_skull;
+			else
+				if(pos_null != -1)
+					pos_max_score = pos_null;
 		}		
 		
 		return pos_max_score;
@@ -50,32 +61,31 @@ public class ManagerGrid {
     	
     	Grid game = new Grid();
     	
-    	Block col = new Block('2');
-    	col.appendTail('2');
-    	col.appendTail('0');
-    	col.appendTail('1');
-    	col.appendTail('1');
+    	Block col = null;
 
     	Block col1 = null;
 
-    	Block col3 = new Block('2');
-    	col3.appendTail('2');
-    	col3.appendTail('0');
+    	Block col2 = new Block('0');
+    	col2.appendTail('1');
+    	col2.appendTail('1');
     	
-    	Block col4 = new Block('0');
+    	Block col3 = null;
     	
-    	Block col5 = new Block('5');
-    	col5.appendTail('5');
+    	Block col4 = new Block('5');
+    	col4.appendTail('5');
+    	
+    	Block col5 = new Block('4');
+    	col5.appendTail('4');
     	col5.appendTail('0');
-    	
-    	Block col6 = new Block('0');
+    	col5.appendTail('4');
+    	col5.appendTail('4');
     	
     	game.columns[0] = col;
     	game.columns[1] = col1;
-    	game.columns[2] = col3;
-    	game.columns[3] = col4;
-    	game.columns[4] = col5;
-    	game.columns[5] = col6;
+    	game.columns[2] = col2;
+    	game.columns[3] = col3;
+    	game.columns[4] = col4;
+    	game.columns[5] = col5;
     	
     	game.link_horizontal();
     	

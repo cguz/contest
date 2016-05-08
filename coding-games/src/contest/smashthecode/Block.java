@@ -1,4 +1,4 @@
-package smashthecode;
+package contest.smashthecode;
 
 public class Block {
 	

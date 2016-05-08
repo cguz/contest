@@ -1,4 +1,4 @@
-package code.jam.r2016.oneB;
+package code.jam.r2016.oneC;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
