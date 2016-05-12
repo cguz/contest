@@ -1,4 +1,4 @@
-package topcoder.dynamic_programming;
+package topcoder.string;
 import java.util.HashMap;
 import java.util.Map;
 
