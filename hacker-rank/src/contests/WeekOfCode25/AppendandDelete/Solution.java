@@ -56,23 +56,15 @@ public class Solution {
 
 		// if the two strings are equals
 		if (remS == remT) {
-			if (K <= S.length()) {
-				if (K % 2 == 0)
-					return "Yes";
-				else
-					return "No";
-			} else {
-				K -= remS;
-				if (K == 0)
-					return "No";
-			}
+			K -= remS;
+			if (K == 0)
+				return "No";
 		} else {
+			K -= remS;
 			if (remS < remT) {
-				K -= remS;
 				if (K == 0)
 					return "No";
 			} else {
-				K -= remS;
 				if (K <= 0)
 					return "No";
 			}
@@ -95,6 +87,8 @@ public class Solution {
 							if (K % 2 == 0)
 								return "Yes";
 							else { // aba / aba 7
+								if (i == 0)
+									return "Yes";
 								K -= S.length();
 								if (K < S.length())
 									return "No";
