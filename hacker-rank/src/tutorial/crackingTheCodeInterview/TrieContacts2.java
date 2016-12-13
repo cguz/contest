@@ -1,4 +1,4 @@
-package tutorials.crackingTheCodeInterview;
+package tutorial.crackingTheCodeInterview;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -137,7 +137,7 @@ public class TrieContacts2 {
     }
     
     public static void main(String[] args) throws FileNotFoundException {
-    	File file = new File("./TEST/tutorials/crackingTheCodeInterview/input.txt");
+    	File file = new File("./TEST/tutorial/crackingTheCodeInterview/input.txt");
     	Scanner in = new Scanner(file);
         // Scanner in = new Scanner(System.in);
         int n = in.nextInt();
