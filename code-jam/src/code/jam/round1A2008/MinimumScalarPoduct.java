@@ -53,6 +53,8 @@ public class MinimumScalarPoduct {
 				file.close();
 			}
 			
+			bf.close();
+			
 		} catch (IOException e) {}		
 	}
 	

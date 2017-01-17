@@ -71,7 +71,9 @@ public class CountingSheep {
 				file.write(output);
 				file.close();
 			}
+
 			
+			bf.close();
 		} catch (IOException e) {}		
 	}
 	

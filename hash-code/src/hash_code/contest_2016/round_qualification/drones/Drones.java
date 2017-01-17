@@ -115,7 +115,9 @@ public class Drones {
 			find_path(new State(warehouses, orders, orders_total, drones));
 
 			System.out.println(output+"\nscore:");
-		
+
+			
+			bf.close();
 		} catch (IOException e) {
 		}
 	}

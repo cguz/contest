@@ -67,6 +67,8 @@ public class CloseMatch {
 				file.close();
 			}
 			
+			bf.close();
+			
 		} catch (IOException e) {}		
 	}
 
