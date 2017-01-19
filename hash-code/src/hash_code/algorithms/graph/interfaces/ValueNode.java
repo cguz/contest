@@ -4,7 +4,7 @@ package hash_code.algorithms.graph.interfaces;
  * @author cguzman@cguz.org
  * Class to represent the state of the given problem
  */
-public interface State {
+public interface ValueNode {
 
 	/**
 	 * @return get the score of the given state

@@ -3,10 +3,10 @@ package hash_code.contest_2017.practice.pizza;
 import java.util.ArrayList;
 import java.util.List;
 
-import hash_code.algorithms.graph.AbstractState;
+import hash_code.algorithms.graph.AbstractValueNode;
 import hash_code.algorithms.graph.interfaces.Action;
 
-public class PizzaGridImp extends AbstractState {
+public class PizzaGridImp extends AbstractValueNode {
 
 	// specific attributes for the problem
 	private int[][] grid;

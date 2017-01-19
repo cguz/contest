@@ -5,56 +5,48 @@ import java.util.List;
 
 import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.Node;
+import hash_code.algorithms.graph.interfaces.ValueNode;
 
 /**
  * 
- * State of the world
+ * Abstract Node of the graph
  * 
  * @author cguzman@cguz.org
  *
  */
-public abstract class AbstractNode<T> implements Node<T> {
+public abstract class AbstractNode implements Node {
 
 	/** value or state of the Node **/
-	private T value;
+	protected ValueNode value;
 
-	/** indicate if the node was visited or not **/
-	private boolean visit;
+	/** list of actions that can be executed from the given nodeValue **/
+	protected Action[] actions;
+	
 
 
 	/**
 	 * Constructor
 	 * @param value
 	 */
-	public AbstractNode(T value){
+	public AbstractNode(ValueNode value){
 		this.value = value;
-		visit = false;
 	}
 	
 	@Override
-	public void setVisit(boolean option) {
-		visit = option;
-	}
-
-	@Override
-	public boolean isVisit() {
-		return visit;
-	}
-
-	@Override
-	public boolean isGoal(Node<T> current) {
+	public boolean isGoal(Node current) {
 		return this.equals(current);
 	}
-
+	
 	@Override
-	public Node<T>[] getSuccessors() {
+	public Node[] getSuccessors() {
 		
 		// we get the actions that can be executed in this state
-		Action[] actions = getActions();
+		if(actions == null)
+			actions = getActions();
 		
-		List<Node<T>> successors = new ArrayList<Node<T>>();
+		List<Node> successors = new ArrayList<Node>();
 		
-		Node<T> newNode;
+		Node newNode;
 		for(Action act: actions){
 			newNode = act.execute(this);
 			if(newNode != null){
@@ -62,8 +54,7 @@ public abstract class AbstractNode<T> implements Node<T> {
 			}
 		}
 		
-		@SuppressWarnings("unchecked")
-		Node<T>[] successorsArr = new Node[successors.size()];
+		Node[] successorsArr = new Node[successors.size()];
 		successorsArr = successors.toArray(successorsArr);
 		
 		return successorsArr;
@@ -71,9 +62,12 @@ public abstract class AbstractNode<T> implements Node<T> {
 	}
 	
 	@Override
-	public T getValueNode() {
+	public ValueNode getValue() {
 		return value;
 	}
+	
+	@Override
+	public abstract int getScore();
 
 	protected abstract Action[] getActions();
 	

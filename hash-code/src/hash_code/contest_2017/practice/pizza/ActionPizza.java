@@ -5,7 +5,7 @@ import java.util.List;
 import hash_code.algorithms.graph.NodeImp;
 import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.Node;
-import hash_code.algorithms.graph.interfaces.State;
+import hash_code.algorithms.graph.interfaces.ValueNode;
 
 public class ActionPizza implements Action {
 
@@ -25,7 +25,7 @@ public class ActionPizza implements Action {
 		
 		Slide toCut;
 		
-		State newNode = new PizzaGridImp(state.getGrid(), state.getMinNumberIngredients(), state.getMinNumberIngredients());
+		ValueNode newNode = new PizzaGridImp(state.getGrid(), state.getMinNumberIngredients(), state.getMinNumberIngredients());
 		for(int i=0; i < l_slides.size(); i++){
 			if(i!=indexSlideCuted){
 				((PizzaGridImp)newNode).add(l_slides.get(i));

@@ -4,11 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import hash_code.algorithms.graph.BFSSearchAlgorithm;
+import hash_code.algorithms.graph.BreadthFSSearchAlgorithm;
 import hash_code.algorithms.graph.NodeImp;
 import hash_code.algorithms.graph.interfaces.Node;
 import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
-import hash_code.algorithms.graph.interfaces.State;
+import hash_code.algorithms.graph.interfaces.ValueNode;
 import hash_code.contest_2017.practice.pizza.PizzaGridImp;
 import hash_code.contest_2017.practice.pizza.Slide;
 
@@ -56,13 +56,10 @@ public class Pizza {
 				
 			}
 			
+			Node graph = new NodeImp(new PizzaGridImp(grid, L , H));
 			
-			State pizza = new PizzaGridImp(grid, L , H);
-			
-			Node<State> graph = new NodeImp<State>(pizza);
-			
-			SearchAlgorithm bfs = new BFSSearchAlgorithm();
-			Node<State> bestNode = bfs.generateTree(graph);
+			SearchAlgorithm bfs = new BreadthFSSearchAlgorithm();
+			Node bestNode = bfs.find(graph, null);
 			
 			System.out.println(bestNode);
 			

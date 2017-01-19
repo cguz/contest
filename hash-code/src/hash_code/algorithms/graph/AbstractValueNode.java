@@ -1,11 +1,18 @@
 package hash_code.algorithms.graph;
 
 import hash_code.algorithms.graph.interfaces.Action;
-import hash_code.algorithms.graph.interfaces.State;
+import hash_code.algorithms.graph.interfaces.ValueNode;
 
-public class AbstractState implements State {
+/**
+ * 
+ * asbtract class of the value
+ * 
+ * @author cguzman@cguz.org
+ *
+ */
+public abstract class AbstractValueNode implements ValueNode {
 	
-	// attributes for any problem
+	// common attributes for any given problem
 	protected Action[] actions;
 	
 	protected int score;

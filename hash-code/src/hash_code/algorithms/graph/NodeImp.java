@@ -1,7 +1,7 @@
 package hash_code.algorithms.graph;
 
 import hash_code.algorithms.graph.interfaces.Action;
-import hash_code.algorithms.graph.interfaces.Node;
+import hash_code.algorithms.graph.interfaces.ValueNode;
 
 /**
  * 
@@ -10,35 +10,19 @@ import hash_code.algorithms.graph.interfaces.Node;
  * @author cguzman@cguz.org
  *
  */
-public class NodeImp<T> extends AbstractNode<T> {
+public class NodeImp extends AbstractNode {
 	
-	public NodeImp(T state){
+	public NodeImp(ValueNode state){
 		super(state);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean equals(Object obj) {
-		Node<T> tmp;
-		if(obj instanceof Node){
-			tmp = (Node<T>) obj;
-			return getValueNode().equals(tmp.getValueNode());
-		}
-		
-		return false;
+	protected Action[] getActions() {
+		return value.getActions();
 	}
 
 	@Override
 	public int getScore() {
-		// TODO
-		return 0;
+		return value.getScore();
 	}
-
-	@Override
-	protected Action[] getActions() {
-		// TODO
-		return null;
-	}
-
 
 }
