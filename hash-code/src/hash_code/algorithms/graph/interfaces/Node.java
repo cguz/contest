@@ -34,5 +34,7 @@ public interface Node {
 	 * @return T state
 	 */
 	public ValueNode getValue();
+
+	Action[] getPath();
 	
 }

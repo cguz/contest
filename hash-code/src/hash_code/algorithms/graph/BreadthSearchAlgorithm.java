@@ -2,7 +2,7 @@ package hash_code.algorithms.graph;
 
 import hash_code.algorithms.graph.interfaces.Node;
 
-public class BreadthFSSearchAlgorithm extends AbstractBreadthFSSearchAlgorithm {
+public class BreadthSearchAlgorithm extends AbstractBreadthSearchAlgorithm {
 
 	private Node maximumNode;
 	private Node minimumNode;
@@ -11,7 +11,7 @@ public class BreadthFSSearchAlgorithm extends AbstractBreadthFSSearchAlgorithm {
 	/* (non-Javadoc)
 	 * @see hash_code.algorithms.graph.AbstractBFSSearchAlgorithm#commonDefaultValues(hash_code.algorithms.graph.interfaces.Node, hash_code.algorithms.graph.interfaces.Node)
 	 */
-	protected void commonDefaultValues(Node root, Node target) {
+	protected void defineInitialValues(Node root, Node target) {
 
 		if(target == null){
 			maximumNode = root;
@@ -24,11 +24,20 @@ public class BreadthFSSearchAlgorithm extends AbstractBreadthFSSearchAlgorithm {
 	 * @see hash_code.algorithms.graph.AbstractBFSSearchAlgorithm#stopCondition(hash_code.algorithms.graph.interfaces.Node, hash_code.algorithms.graph.interfaces.Node)
 	 */
 	protected boolean stopCondition(Node current, Node target) {
+
+		System.out.println("******************");
+		System.out.println("** CURRENT NODE **");
+		System.out.println("******************");
+		System.out.println(current.toString());
+		
+		// if the target is null, we save the node if it is necessary and return false
 		if(target == null){
-			checkScore(current);
+			saveNodes(current);
 			return false;
-		}			
+		}
+		
 		return current.isGoal(target);
+		
 	}
 	
 	/* (non-Javadoc)
@@ -42,13 +51,13 @@ public class BreadthFSSearchAlgorithm extends AbstractBreadthFSSearchAlgorithm {
 	
 	
 	
-	private void checkScore(Node root) {
+	protected void saveNodes(Node current) {
 
-		if(checkMaximumScore(root))
-			maximumNode = root;
+		if(checkMaximumScore(current))
+			maximumNode = current;
 
-		if(checkMinimumScore(root))
-			minimumNode = root;
+		if(checkMinimumScore(current))
+			minimumNode = current;
 		
 	}
 

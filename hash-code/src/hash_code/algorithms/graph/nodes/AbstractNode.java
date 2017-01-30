@@ -1,4 +1,4 @@
-package hash_code.algorithms.graph;
+package hash_code.algorithms.graph.nodes;
 
 import java.util.ArrayList;
 import java.util.List;

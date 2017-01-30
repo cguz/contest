@@ -15,7 +15,7 @@ import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
  * @author cguzman@cguz.org
  *
  */
-public abstract class AbstractBreadthFSSearchAlgorithm implements SearchAlgorithm {
+public abstract class AbstractBreadthSearchAlgorithm implements SearchAlgorithm {
 	
 
 	private Set<Node> visitedNodes = new HashSet<Node>();
@@ -32,7 +32,7 @@ public abstract class AbstractBreadthFSSearchAlgorithm implements SearchAlgorith
 		visitedNodes.add(root);
 		
 		/** function to define values **/
-		commonDefaultValues(root, target);
+		defineInitialValues(root, target);
 		
 		while(!Q.isEmpty()){
 			current = Q.poll();
@@ -59,7 +59,7 @@ public abstract class AbstractBreadthFSSearchAlgorithm implements SearchAlgorith
 	 * @param root node
 	 * @param target node
 	 */
-	protected abstract void commonDefaultValues(Node root, Node target);
+	protected abstract void defineInitialValues(Node root, Node target);
 
 	/**
 	 * function to define the stop condition

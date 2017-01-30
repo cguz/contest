@@ -16,4 +16,9 @@ public interface ValueNode {
 	 */
 	Action[] getActions();
 
+	/**
+	 * @return retrieve the path (as a list of actions) to reach this state 
+	 */
+	Action[] getPath();
+
 }

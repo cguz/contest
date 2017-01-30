@@ -32,12 +32,36 @@ public class Slide {
 	}
 
 	public int getScore() {
-		return 0;
+		return getCells();
 	}
 
 
 	public int getCells() {
-		return (r2-r1)*(c2-c1);
+		return (r2-r1+1)*(c2-c1+1);
 	}
 
+
+	@Override
+	public int hashCode() {
+		
+		int result = 1;
+		result = 31 * result + r1;
+		result = 31 * result + c1;
+		result = 31 * result + r2;
+		result = 31 * result + c2;
+		
+		return result;
+	}
+
+
+	@Override
+	public String toString() {
+		return r1 +" " +c1+" "+r2+" "+c2;
+	}
+
+
+	public boolean isInside(int r, int c) {
+		return (r1 >= r && r <= r2) && (c1 >= c && c <= c2);
+	}
+	
 }

@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import hash_code.algorithms.graph.BreadthFSSearchAlgorithm;
-import hash_code.algorithms.graph.NodeImp;
+import hash_code.algorithms.graph.SearchAlgorithmFactory;
+import hash_code.algorithms.graph.enumerates.ALGORITHM;
+import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.Node;
 import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
-import hash_code.algorithms.graph.interfaces.ValueNode;
-import hash_code.contest_2017.practice.pizza.PizzaGridImp;
-import hash_code.contest_2017.practice.pizza.Slide;
+import hash_code.algorithms.graph.nodes.NodeImp;
+import hash_code.contest_2017.practice.pizza.PizzaGridValue;
 
 
 /**
@@ -32,7 +32,7 @@ public class Pizza {
 		String[] sCadena = null;
 		try {
 
-			BufferedReader bf = new BufferedReader(new FileReader("./TEST/2017/practice/samll.in"));
+			BufferedReader bf = new BufferedReader(new FileReader("TEST/2017/practice/example.in"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			
@@ -56,34 +56,23 @@ public class Pizza {
 				
 			}
 			
-			Node graph = new NodeImp(new PizzaGridImp(grid, L , H));
+			Node graph = new NodeImp(new PizzaGridValue(grid, L , H));
 			
-			SearchAlgorithm bfs = new BreadthFSSearchAlgorithm();
+			SearchAlgorithm bfs = SearchAlgorithmFactory.getAlgorithm(ALGORITHM.BREADTH_SEARCH);
 			Node bestNode = bfs.find(graph, null);
 			
-			System.out.println(bestNode);
+			Action[] action = bestNode.getPath();
+			for(Action act: action)
+				System.out.println(act.toString());
 			
 			/*// sint T = Integer.parseInt(bf.readLine());
 			Files file = new Files("output", false);
 			file.write(output);
 			file.close();*/
-
 			
 			bf.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
-
-	/*
-	public static void main(String[] args){
-		
-		Grid pizza = new PizzaGridImp(grid);
-		((PizzaGridImp)pizza).add(new Slide(0,0,R,C));
-		
-		State initial = new State(pizza);
-		
-		SearchAlgorithm bfs = new SearchAlgorithm();
-		System.out.println(bfs.breadthFirstSearch(initial, initial));
-		
-	}*/
 }
