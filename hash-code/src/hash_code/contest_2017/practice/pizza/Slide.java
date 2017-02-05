@@ -1,6 +1,8 @@
 package hash_code.contest_2017.practice.pizza;
 
-public class Slide {
+import java.util.Comparator;
+
+public class Slide implements Comparator {
 
 	private int r1;
 	private int c1;
@@ -68,6 +70,23 @@ public class Slide {
 		return (r1 >= slide.getR1() && r2 <= slide.getR2() && 
 			       c1 <= slide.getC1() && c2 >= slide.getC2());
 		
+	}
+
+	@Override
+	public int compare(Object t1, Object t2) {
+		Slide o1 = (Slide) t1;
+		Slide o2 = (Slide) t2;
+		int compare = o1.getR1()-o2.getR1();
+		if(compare != 0)
+			return compare;
+		compare = o1.getC1()-o2.getC1();
+		if(compare != 0)
+			return compare;
+		compare = o1.getR2()-o2.getR2();
+		if(compare != 0)
+			return compare;
+		compare = o1.getC2()-o2.getC2();
+		return compare;
 	}
 	
 }

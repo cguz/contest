@@ -12,6 +12,7 @@ import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
 import hash_code.algorithms.graph.nodes.NodeImp;
 import hash_code.contest_2017.practice.common.ACTIONS_TOTAL;
 import hash_code.contest_2017.practice.pizza.PizzaGridValue;
+import hash_code.tools.Files;
 
 
 /**
@@ -30,10 +31,11 @@ public class Pizza {
 
 	private void begin(String[] args) {
 		String output = "";
-		String[] sCadena = null;
+		String outputFileName = "small";
+		String testDir = "TEST/2017/practice/";
 		try {
 
-			BufferedReader bf = new BufferedReader(new FileReader("TEST/2017/practice/example.in"));
+			BufferedReader bf = new BufferedReader(new FileReader(testDir+outputFileName+".in"));
 			//BufferedReader bf = new BufferedReader(new FileReader(new File (args[0])));
 		    
 			
@@ -66,15 +68,20 @@ public class Pizza {
 			Node bestNode = bfs.find(graph, null);
 			
 			Action[] action = bestNode.getPath();
-			for(Action act: action)
-				System.out.println(act.toString());
+			output+=action.length+"\n";
+			for(Action act: action){
+				output+=act.toString()+"\n";
+			}
 			
-			/*// sint T = Integer.parseInt(bf.readLine());
-			Files file = new Files("output", false);
+			System.out.println(output);
+			System.out.println("Score:"+bestNode.getScore());
+			
+			Files file = new Files(testDir+outputFileName+".out", false);
 			file.write(output);
-			file.close();*/
+			file.close();
 			
 			bf.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

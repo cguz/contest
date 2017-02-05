@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.Node;
 import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
 
@@ -42,14 +41,6 @@ public abstract class AbstractBreadthSearchAlgorithm implements SearchAlgorithm 
 			stop = stopCondition(current, target);
 			
 			if(stop) return current; 
-			
-			if(current.getScore() == 6){
-				Action[] action = current.getPath();
-				for(Action act: action){
-					if(act.toString().equals("0 0 2 1"))
-						System.out.println(act.toString());
-				}
-			}
 			
 			for(Node successor : current.getSuccessors()){
 				if(!visitedNodes.contains(successor)){

@@ -10,7 +10,7 @@ import hash_code.algorithms.graph.nodes.AbstractValueNode;
 import hash_code.contest_2017.practice.common.ACTIONS_TOTAL;
 
 public class PizzaGridValue extends AbstractValueNode {
-
+	
 	// specific attributes for the problem
 	private int[][] grid;
 	private List<Slide> slides;
@@ -130,9 +130,9 @@ public class PizzaGridValue extends AbstractValueNode {
 			}
 		}
 
-		System.out.println("** ACTIONS CAN BE EXECUTED **");
-		System.out.println("["+actionsList.size()+"]"+actionsList.toString());
-		System.out.println("");
+		//System.out.println("** ACTIONS CAN BE EXECUTED **");
+		//System.out.println("["+actionsList.size()+"]"+actionsList.toString());
+		//System.out.println("");
 		
 		actions = new Action[actionsList.size()];
 		return actions = actionsList.toArray(actions);
