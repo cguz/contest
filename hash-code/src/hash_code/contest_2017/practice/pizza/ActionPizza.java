@@ -10,13 +10,7 @@ import hash_code.algorithms.graph.nodes.NodeImp;
 public class ActionPizza implements Action {
 
 	private Slide slide;
-	private int indexSlide;
 	
-	public ActionPizza(Slide slide, int i) {
-		indexSlide = i;
-		this.slide = slide;
-	}
-
 	public ActionPizza(Slide slide) {
 		this.slide = slide;
 	}
@@ -32,34 +26,44 @@ public class ActionPizza implements Action {
 	@Override
 	public Node execute(Node current) {
 		
-		Slide newSlide;
-
-		// we create the new node value
+		// create the new node value
 		ValueNode newNode = new PizzaGridValue(current.getValue());
 		
-		// we get the current slides of the pizza
+		// get the current slides
 		List<Slide> currentSlides = ((PizzaGridValue)current.getValue()).getSlides();
 		
-		if(currentSlides.size() == 0){
-			// we insert the first slide
-			((PizzaGridValue)newNode).add(slide);
-		}else{
-			for(int i=0; i < currentSlides.size(); i++){
-				if(i!=indexSlide){
-					((PizzaGridValue)newNode).add(currentSlides.get(i));
-				}else{
-					// we insert the first slide
-					((PizzaGridValue)newNode).add(slide);
-					
-					// we insert the second slide
-					newSlide = currentSlides.get(indexSlide);
-					((PizzaGridValue)newNode).add(new Slide(slide.getR1(),slide.getC2()+1, newSlide.getR2(), newSlide.getC2()));
-				}
-			}
+		// insert the new slide
+		((PizzaGridValue)newNode).add(slide);
+		
+		// find if we need to split the slide
+		int indexSlide = findIndexSlide(currentSlides);
+		if(indexSlide != -1){
+			
+			Slide temp = currentSlides.get(indexSlide);
+			
+			// remove the previous slide
+			((PizzaGridValue)newNode).removeIndex(indexSlide);
+			
+			((PizzaGridValue)newNode).add(new Slide(slide.getR1(),slide.getC2()+1, temp.getR2(), temp.getC2()));
+			
 		}
 		
 		return new NodeImp(newNode);
 	}
+	
+
+	private int findIndexSlide(List<Slide> currentSlides) {
+		int indexSlide = -1;
+		for(int i=0; i < currentSlides.size(); ++i){
+			Slide sli = currentSlides.get(i);
+			if(sli.contains(slide)){
+				indexSlide = i;
+				break;
+			}
+		}
+		return indexSlide;
+	}
+	
 
 	public Slide getSlide() {
 		return slide;

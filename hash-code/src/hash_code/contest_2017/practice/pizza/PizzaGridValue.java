@@ -7,6 +7,7 @@ import java.util.List;
 import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.ValueNode;
 import hash_code.algorithms.graph.nodes.AbstractValueNode;
+import hash_code.contest_2017.practice.common.ACTIONS_TOTAL;
 
 public class PizzaGridValue extends AbstractValueNode {
 
@@ -25,10 +26,14 @@ public class PizzaGridValue extends AbstractValueNode {
 	}
 
 	public PizzaGridValue(ValueNode valueNode) {
-		this.grid = ((PizzaGridValue) valueNode).getGrid();
-		slides = new ArrayList<Slide>();
+		grid = ((PizzaGridValue) valueNode).getGrid();
 		minNumberIngredients = ((PizzaGridValue) valueNode).getMinNumberIngredients();
 		maxTotalNumberCells = ((PizzaGridValue) valueNode).getMaxTotalNumberCells();
+		
+		// save the previous slides
+		slides = new ArrayList<Slide>();
+		for(Slide s: ((PizzaGridValue)valueNode).getSlides())
+			add(s);
 	}
 
 	@Override
@@ -112,107 +117,59 @@ public class PizzaGridValue extends AbstractValueNode {
 	@Override
 	public Action[] getActions() {
 
-		Slide slide, slide2, s;
-
-		int startRow = 0;
-		int startCol = 0;
-		
-		int minusRow = grid.length;
-		int minusCol = grid[0].length;
-		
 		if (actions != null)
 			return actions;
 		
 		List<Action> actionsList = new ArrayList<Action>();
-
-		// for each slides
-		for (int i = 0; i < slides.size(); i++) {
-			s = slides.get(i);
-			for (int r = s.getR1(); r < s.getR2(); r++) {
-				slide = new Slide(s.getR1(), s.getC1(), r, s.getC2());
-				slide2 = new Slide(s.getR2(), s.getC1(), s.getR2(), s.getC2());
-				if (isValidSlide(slide) && isValidSlide(slide2)) {
-					actionsList.add(new ActionPizza(slide, i));
-				}
-			}
-			
-			for (int c = s.getC1(); c < s.getC2(); c++) {
-				slide = new Slide(s.getR1(), s.getC1(), s.getR2(), c);
-				slide2 = new Slide(slide.getR1(), slide.getC2()+1, s.getR2(), s.getC2());
-				if (isValidSlide(slide) && isValidSlide(slide2)) {
-					actionsList.add(new ActionPizza(slide, i));
-				}
-			}
-
-			if((s.getR2()-s.getR1()) < minusRow)
-				startRow = s.getR2();
-			if((s.getC2()-s.getC1()) < minusCol)
-				startCol = s.getC2();
-		}
 		
-		// for the remaining part of the grid
-		if(startRow != grid.length-1){
-			for (int r = startRow+1; r < grid.length; r++) {
-				slide = new Slide(startRow, startCol, r, grid[0].length-1);
-				if (isValidSlide(slide)) {
-					actionsList.add(new ActionPizza(slide, -1));
-				}
-			}
-		}else
-			startRow = 0;
-		
-		if(startCol != grid[startRow].length-1){
-			for (int c = startCol+1; c < grid[startRow].length; c++) {
-				slide = new Slide(startRow, startCol, grid.length-1, c);
-				if (isValidSlide(slide)) {
-					actionsList.add(new ActionPizza(slide, -1));
-				}
+
+		// for all actions
+		for(Action act: ACTIONS_TOTAL.actionsList){
+			if(!isEqual(act, slides) && !isInside(act, slides)){
+				actionsList.add(act);
 			}
 		}
 
+		System.out.println("** ACTIONS CAN BE EXECUTED **");
+		System.out.println("["+actionsList.size()+"]"+actionsList.toString());
+		System.out.println("");
+		
 		actions = new Action[actionsList.size()];
 		return actions = actionsList.toArray(actions);
 
 	}
 
-	private boolean isInsideAnSlide(int r, int c) {
+	private boolean isEqual(Action act, List<Slide> slides2) {
 		Slide slide;
-		for (int i = 0; i < slides.size(); i++) {
-			slide = slides.get(i);
-			if(slide.isInside(r, c))
+		for (int i = 0; i < slides2.size(); i++) {
+			slide = slides2.get(i);
+			if(slide.equals(((ActionPizza)act).getSlide()))
 				return true;
 		}
 		return false;
 	}
 
 	/**
-	 * validate if a given slide is valid or not
-	 * 
-	 * @param slide
-	 *            Slide to validate
-	 * @return true if the slide is valid. Otherwise false
+	 * Verify if the new Action is not inside the previous slides
+	 * @param act Action ( new slide )
+	 * @param slides2 Set of slides
+	 * @return true if the action intersect any previous slide
 	 */
-	private boolean isValidSlide(Slide slide) {
-
-		int ingredientsMushroom = 0;
-		int ingredientsTomato = 0;
-
-		for (int r = slide.getR1(); r <= slide.getR2(); r++) {
-			for (int c = slide.getC1(); c <= slide.getC2(); c++) {
-				if (grid[r][c] == (int)'M') {
-					ingredientsMushroom++;
-				}
-
-				if (grid[r][c] == (int)'T') {
-					ingredientsTomato++;
+	private boolean isInside(Action act, List<Slide> slides2) {
+		Slide slide;
+		Slide actionSlide;
+		for (int i = 0; i < slides2.size(); i++) {
+			slide = slides2.get(i);
+			actionSlide = ((ActionPizza)act).getSlide();
+			
+			// for each cell, verify if the cell is not inside the slide
+			for(int r=actionSlide.getR1(); r <= actionSlide.getR2(); r++){
+				for(int c=actionSlide.getC1(); c <= actionSlide.getC2();c++){
+					if(slide.isInside(r, c))
+						return true;	
 				}
 			}
 		}
-
-		if (ingredientsMushroom >= minNumberIngredients && ingredientsTomato >= minNumberIngredients)
-			if (slide.getCells() <= maxTotalNumberCells)
-				return true;
-
 		return false;
 	}
 
@@ -225,6 +182,11 @@ public class PizzaGridValue extends AbstractValueNode {
 	public void add(Slide slide) {
 		score += slide.getScore();
 		slides.add(slide);
+	}
+
+	public void removeIndex(int indexSlide) {
+		Slide temp = slides.remove(indexSlide);
+		score-=temp.getScore();
 	}
 
 	/**

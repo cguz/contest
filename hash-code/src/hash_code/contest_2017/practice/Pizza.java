@@ -10,6 +10,7 @@ import hash_code.algorithms.graph.interfaces.Action;
 import hash_code.algorithms.graph.interfaces.Node;
 import hash_code.algorithms.graph.interfaces.SearchAlgorithm;
 import hash_code.algorithms.graph.nodes.NodeImp;
+import hash_code.contest_2017.practice.common.ACTIONS_TOTAL;
 import hash_code.contest_2017.practice.pizza.PizzaGridValue;
 
 
@@ -55,6 +56,9 @@ public class Pizza {
 				}
 				
 			}
+			
+			ACTIONS_TOTAL.generateActions(grid, L, H);
+			
 			
 			Node graph = new NodeImp(new PizzaGridValue(grid, L , H));
 			

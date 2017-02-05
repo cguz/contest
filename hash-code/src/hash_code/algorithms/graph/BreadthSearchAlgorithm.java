@@ -25,6 +25,7 @@ public class BreadthSearchAlgorithm extends AbstractBreadthSearchAlgorithm {
 	 */
 	protected boolean stopCondition(Node current, Node target) {
 
+		// FIXME
 		System.out.println("******************");
 		System.out.println("** CURRENT NODE **");
 		System.out.println("******************");

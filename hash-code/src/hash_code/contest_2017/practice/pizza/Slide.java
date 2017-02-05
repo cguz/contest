@@ -59,9 +59,15 @@ public class Slide {
 		return r1 +" " +c1+" "+r2+" "+c2;
 	}
 
-
 	public boolean isInside(int r, int c) {
-		return (r1 >= r && r <= r2) && (c1 >= c && c <= c2);
+		return (r1 <= r && r <= r2) && (c1 <= c && c <= c2);
+	}
+
+	public boolean contains(Slide slide) {
+		
+		return (r1 >= slide.getR1() && r2 <= slide.getR2() && 
+			       c1 <= slide.getC1() && c2 >= slide.getC2());
+		
 	}
 	
 }
